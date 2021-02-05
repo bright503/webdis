@@ -10,10 +10,9 @@ RUN sed -i -e 's/"daemonize":.*true,/"daemonize": false,/g' /etc/webdis.prod.jso
 
 # main image
 FROM alpine:3.12.3
-RUN apk update && apk add libevent msgpack-c redis
+RUN apk update && apk add libevent msgpack-c
 COPY --from=stage /usr/local/bin/webdis /usr/local/bin/
 COPY --from=stage /etc/webdis.prod.json /etc/webdis.prod.json
-RUN echo "daemonize yes" >> /etc/redis.conf
-CMD /usr/bin/redis-server /etc/redis.conf && /usr/local/bin/webdis /etc/webdis.prod.json
+CMD /usr/local/bin/webdis /etc/webdis.prod.json
 
 EXPOSE 7379
