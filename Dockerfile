@@ -6,14 +6,13 @@ RUN apk update && apk add wget make gcc libevent-dev msgpack-c-dev musl-dev bsd-
 # RUN wget https://github.com/bright503/webdis/archive/$(cat latest).tar.gz -O webdis-latest.tar.gz
 # RUN tar -xvzf webdis-latest.tar.gz
 COPY . /webdis
-RUN cd webdis && make && make install && cd ..
+RUN cd webdis-$(cat latest) && make && make install && cd ..
 RUN sed -i -e 's/"daemonize":.*true,/"daemonize": false,/g' /etc/webdis.prod.json
 
 # main image
 FROM alpine:3.12.3
 RUN apk update && apk add libevent msgpack-c
 COPY --from=stage /usr/local/bin/webdis /usr/local/bin/
-COPY --from=stage /etc/webdis.prod.json /etc/webdis.prod.json
+COPY --from=stage /etc/webdis.prod.json /etc/webdis.prod.json.template 
+CMD envsubst '' < /etc/webdis.prod.json.template > /etc/webdis.prod.json
 CMD /usr/local/bin/webdis /etc/webdis.prod.json
-
-EXPOSE 7379
