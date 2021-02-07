@@ -12,5 +12,6 @@ RUN apk update && apk add libevent msgpack-c gettext
 COPY --from=stage /usr/local/bin/webdis /usr/local/bin/
 COPY --from=stage /etc/webdis.prod.json /etc/webdis.prod.json.template 
 COPY docker-entrypoint.sh /entrypoint.sh
+RUN ["chmod", "+x", "/entrypoint.sh"]
 EXPOSE 7379
 ENTRYPOINT ["/entrypoint.sh"]
