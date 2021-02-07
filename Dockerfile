@@ -11,5 +11,5 @@ FROM alpine:3.12.3
 RUN apk update && apk add libevent msgpack-c
 COPY --from=stage /usr/local/bin/webdis /usr/local/bin/
 COPY --from=stage /etc/webdis.prod.json /etc/webdis.prod.json.template 
-CMD envsubst '' < /etc/webdis.prod.json.template > /etc/webdis.prod.json
+CMD envsubst < /etc/webdis.prod.json.template > /etc/webdis.prod.json
 CMD /usr/local/bin/webdis /etc/webdis.prod.json
